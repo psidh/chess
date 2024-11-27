@@ -66,3 +66,5 @@ Play Chess with your friends
 
 - [ ] Store all game data in a database.
 - [ ] Optimize database interactions for faster performance.
+
+## License [MIT](/LICENSE)
