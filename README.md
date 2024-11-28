@@ -3,7 +3,9 @@
 Play Chess with your friends
 
 ### Real-time Chess game : `BackEnd-1`
+
 ### User Authentication : `BackEnd 2`
+
 ### Chess Board : `FrontEnd 2`
 
 - Tech Stack: Node.js, WebSockets, Chess.js, Next.js
@@ -31,10 +33,10 @@ Play Chess with your friends
 
 ## Random Game
 
-- [ ] On selecting **Random Game**:
-  - [ ] Add the user to a **pending user** queue.
-  - [ ] Match with another user upon their arrival.
-  - [ ] Start the game when two users are matched.
+- [x] On selecting **Random Game**:
+  - [x] Add the user to a **pending user** queue.
+  - [x] Match with another user upon their arrival.
+  - [x] Start the game when two users are matched.
 
 ---
 
