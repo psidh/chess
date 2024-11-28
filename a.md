@@ -21,10 +21,10 @@
 
 ## Random Game
 
-- [ ] On selecting **Random Game**:
-  - [ ] Add the user to a **pending user** queue.
-  - [ ] Match with another user upon their arrival.
-  - [ ] Start the game when two users are matched.
+- [x] On selecting **Random Game**:
+  - [x] Add the user to a **pending user** queue.
+  - [x] Match with another user upon their arrival.
+  - [x] Start the game when two users are matched.
 
 ---
 

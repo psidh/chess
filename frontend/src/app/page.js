@@ -22,7 +22,7 @@ export default function Page() {
       <div className="w-1/2 flex flex-col justify-center p-16 space-y-8">
         <div className="space-y-4">
           <h1 className="text-6xl font-bold tracking-tight leading-snug">
-            Welcome to <span className="text-blue-500">Chess Bot Com</span>
+            Welcome to  <br/> <span className="text-blue-500">Chess Bot Com</span>
           </h1>
           <p className="text-lg text-neutral-300">
             Play with your friends or random opponents. Outsmart your rivals and
@@ -32,7 +32,7 @@ export default function Page() {
 
         <div className="flex space-x-6">
           <Button
-            className="px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-all"
+            className="w-48 py-3 text-lg bg-blue-600 hover:bg-blue-700 rounded-lg font-medium"
             onClick={() => router.push('/home')}
           >
             Play Now
@@ -42,7 +42,8 @@ export default function Page() {
             href="https://github.com/psidh/chess"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-800 to-blue-950 text-lg font-semibold rounded-lg shadow-md hover:scale-105 transition-all"
+            className="flex items-center gap-x-12 justify-center w-48 py-3 bg-gradient-to-r from-blue-800 to-blue-950        
+            text-lg font-semibold rounded-lg"
           >
             <span>GitHub</span>
             <SiGithub className="ml-3" size={24} />

@@ -25,45 +25,45 @@ class Manager {
             try {
                 let user = yield prisma.user.findUnique({ where: { email } });
                 if (!user) {
-                    console.log('User not found in database');
+                    console.log("User not found in database, add user level");
                     return;
                 }
                 this.users.push({ socket, userId: user.userId });
-                console.log('User added:', user.userId);
-                this.matchMaker(socket, user.userId, true);
+                console.log("User added into the queue:", user.userId);
+                this.matchMaker(socket, user.userId);
             }
             catch (error) {
-                console.error('Error fetching user from database:', error);
+                console.error("Error fetching user from database:", error);
             }
         });
     }
     removeUser(socket) {
         this.users = this.users.filter((user) => user.socket !== socket);
     }
-    matchMaker(socket, userId, initFlag = false) {
-        if (initFlag) {
-            if (this.pendingUser) {
-                const game = new Game_1.Game(this.pendingUser.socket, socket, this.pendingUser.userId, userId);
-                this.games.push(game);
-                console.log('Game initialized with players:', this.pendingUser.userId, userId);
-                this.pendingUser = null;
+    matchMaker(socket, userId) {
+        socket.on("message", (data) => {
+            var _a, _b;
+            const message = JSON.parse(data.toString());
+            if (message.type === Messages_1.INIT_GAME) {
+                if (this.pendingUser) {
+                    const game = new Game_1.Game((_a = this.pendingUser) === null || _a === void 0 ? void 0 : _a.socket, socket, (_b = this.pendingUser) === null || _b === void 0 ? void 0 : _b.userId, userId);
+                    this.games.push(game);
+                    console.log("Game initialized with players:", this.pendingUser.userId, userId);
+                    this.pendingUser = null;
+                }
+                else {
+                    this.pendingUser = { socket, userId };
+                    console.log("User added to pending queue:", userId);
+                }
             }
-            else {
-                this.pendingUser = { socket, userId };
-                console.log('User added to pending queue:', userId);
-                socket.on('message', (data) => {
-                    const message = JSON.parse(data.toString());
-                    if (message.type === Messages_1.MOVE) {
-                        const game = this.games.find((game) => game.player1 === socket || game.player2 === socket);
-                        if (game) {
-                            const color = game.player1 === socket ? 'white' : 'black';
-                            game.makeMove(socket, message.payload.move, color);
-                        }
-                    }
-                });
+            if (message.type === Messages_1.MOVE) {
+                const game = this.games.find((game) => game.player1 === socket || game.player2 === socket);
+                if (game) {
+                    const color = game.player1 === socket ? "white" : "black";
+                    game.makeMove(socket, message.payload.move, color);
+                }
             }
-            return;
-        }
+        });
     }
 }
 exports.Manager = Manager;

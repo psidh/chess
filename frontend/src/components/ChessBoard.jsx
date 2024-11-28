@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ChessBoard({ board, socket, email }) {
+export default function ChessBoard({ chess, board, socket, email, setBoard }) {
   const [from, setFrom] = useState(null);
 
   const handleSquareClick = (squareRepresentation) => {
@@ -18,6 +18,11 @@ export default function ChessBoard({ board, socket, email }) {
       );
 
       setFrom(null);
+      chess.move({
+        from,
+        to : squareRepresentation
+      })
+      setBoard(chess.board());
       console.log('Move sent:', { from, to: squareRepresentation });
     }
   };

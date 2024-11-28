@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { userState } from '@/recoil/userAtom';
-
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { emailAtom } from "@/recoil-persist/emailAtom";
 export const useSocket = () => {
   const [socket, setSocket] = useState(null);
-  const user = useRecoilValue(userState);
-  console.log(user.email);
-
+  const [email, setEmail] = useRecoilState(emailAtom);
+  console.log(email);
+  
   useEffect(() => {
-    if (user.email) {
-      // Add email as query parameter
+    if (email) {
       const ws = new WebSocket(
-        `ws://localhost:3001?email=${encodeURIComponent(user.email)}`
+        `ws://localhost:3001?email=${encodeURIComponent(email)}`
       );
 
       ws.onopen = () => {
-        console.log('Connected to the socket...');
+        console.log("Connected to the socket...");
         setSocket(ws);
       };
 
       ws.onclose = () => {
-        console.log('Connection closed');
+        console.log("Connection closed");
         setSocket(null);
       };
 
@@ -28,7 +26,7 @@ export const useSocket = () => {
         ws.close();
       };
     }
-  }, [user.email]);
+  }, [email]);
 
   return socket;
 };

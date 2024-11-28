@@ -26,13 +26,13 @@ class Game {
         this.player1.send(JSON.stringify({
             type: Messages_1.INIT_GAME,
             payload: {
-                color: 'white',
+                color: "white",
             },
         }));
         this.player2.send(JSON.stringify({
             type: Messages_1.INIT_GAME,
             payload: {
-                color: 'black',
+                color: "black",
             },
         }));
     }
@@ -47,51 +47,35 @@ class Game {
                     },
                 });
                 this.gameId = game.gameId;
-                console.log('Game initialized with ID:', game.gameId);
+                console.log("Game initialized with ID:", game.gameId);
             }
             catch (error) {
-                console.error('Error initializing game:', error);
+                console.error("Error initializing game:", error);
             }
         });
     }
     makeMove(socket, move, color) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.board.turn() === 'w' && socket !== this.player1)
+            if (this.board.turn() === "w" && socket !== this.player1)
                 return;
-            if (this.board.turn() === 'b' && socket !== this.player2)
+            if (this.board.turn() === "b" && socket !== this.player2)
                 return;
             const result = this.board.move(move);
             if (!result) {
-                console.log('Invalid move:', move);
+                console.log("Invalid move:", move);
                 socket.send(JSON.stringify({
                     type: Messages_1.ERROR,
-                    payload: 'Invalid move',
+                    payload: "Invalid move",
                 }));
             }
-            const nextPlayer = this.board.turn() === 'w' ? this.player1 : this.player2;
+            const nextPlayer = this.board.turn() === "w" ? this.player1 : this.player2;
             nextPlayer.send(JSON.stringify({
                 type: Messages_1.MOVE,
                 payload: move,
             }));
-            if (this.gameId) {
-                try {
-                    yield prisma.move.create({
-                        data: {
-                            gameId: this.gameId,
-                            from: move.from,
-                            to: move.to,
-                            color,
-                            moveAt: new Date(),
-                        },
-                    });
-                    console.log('Move saved:', move);
-                }
-                catch (error) {
-                    console.error('Error saving move:', error);
-                }
-            }
+            console.log("Move was made: ", move);
             if (this.board.isGameOver()) {
-                const winner = this.board.turn() === 'w' ? 'black' : 'white';
+                const winner = this.board.turn() === "w" ? "black" : "white";
                 this.player1.send(JSON.stringify({
                     type: Messages_1.GAME_OVER,
                     payload: { winner },
@@ -100,21 +84,6 @@ class Game {
                     type: Messages_1.GAME_OVER,
                     payload: { winner },
                 }));
-                if (this.gameId) {
-                    try {
-                        yield prisma.game.update({
-                            where: { gameId: this.gameId },
-                            data: {
-                                winner,
-                                endedAt: new Date(),
-                            },
-                        });
-                        console.log('Game over. Winner:', winner);
-                    }
-                    catch (error) {
-                        console.error('Error updating game:', error);
-                    }
-                }
             }
         });
     }

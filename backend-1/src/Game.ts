@@ -1,8 +1,8 @@
-import { Chess } from 'chess.js';
-import { WebSocket } from 'ws';
-import { ERROR, GAME_OVER, INIT_GAME, MOVE } from './Messages';
+import { Chess } from "chess.js";
+import { WebSocket } from "ws";
+import { ERROR, GAME_OVER, INIT_GAME, MOVE } from "./Messages";
 // import { getColor } from './utils/Color';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +30,7 @@ export class Game {
       JSON.stringify({
         type: INIT_GAME,
         payload: {
-          color: 'white',
+          color: "white",
         },
       })
     );
@@ -39,7 +39,7 @@ export class Game {
       JSON.stringify({
         type: INIT_GAME,
         payload: {
-          color: 'black',
+          color: "black",
         },
       })
     );
@@ -56,9 +56,9 @@ export class Game {
       });
 
       this.gameId = game.gameId;
-      console.log('Game initialized with ID:', game.gameId);
+      console.log("Game initialized with ID:", game.gameId);
     } catch (error) {
-      console.error('Error initializing game:', error);
+      console.error("Error initializing game:", error);
     }
   }
 
@@ -67,22 +67,22 @@ export class Game {
     move: { from: string; to: string },
     color: string
   ) {
-    if (this.board.turn() === 'w' && socket !== this.player1) return;
-    if (this.board.turn() === 'b' && socket !== this.player2) return;
+    if (this.board.turn() === "w" && socket !== this.player1) return;
+    if (this.board.turn() === "b" && socket !== this.player2) return;
 
     const result = this.board.move(move);
 
     if (!result) {
-      console.log('Invalid move:', move);
+      console.log("Invalid move:", move);
       socket.send(
         JSON.stringify({
           type: ERROR,
-          payload: 'Invalid move',
+          payload: "Invalid move",
         })
       );
     }
 
-    const nextPlayer = this.board.turn() === 'w' ? this.player1 : this.player2;
+    const nextPlayer = this.board.turn() === "w" ? this.player1 : this.player2;
     nextPlayer.send(
       JSON.stringify({
         type: MOVE,
@@ -90,26 +90,10 @@ export class Game {
       })
     );
 
-    if (this.gameId) {
-      try {
-        await prisma.move.create({
-          data: {
-            gameId: this.gameId,
-            from: move.from,
-            to: move.to,
-            color,
-            moveAt: new Date(),
-          },
-        });
-
-        console.log('Move saved:', move);
-      } catch (error) {
-        console.error('Error saving move:', error);
-      }
-    }
+    console.log("Move was made: ", move);
 
     if (this.board.isGameOver()) {
-      const winner = this.board.turn() === 'w' ? 'black' : 'white';
+      const winner = this.board.turn() === "w" ? "black" : "white";
       this.player1.send(
         JSON.stringify({
           type: GAME_OVER,
@@ -122,21 +106,6 @@ export class Game {
           payload: { winner },
         })
       );
-
-      if (this.gameId) {
-        try {
-          await prisma.game.update({
-            where: { gameId: this.gameId },
-            data: {
-              winner,
-              endedAt: new Date(),
-            },
-          });
-          console.log('Game over. Winner:', winner);
-        } catch (error) {
-          console.error('Error updating game:', error);
-        }
-      }
     }
   }
 }

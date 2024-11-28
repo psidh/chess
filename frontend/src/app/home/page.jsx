@@ -1,43 +1,41 @@
-'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import Button from '@/components/Button';
-import { userState } from '../../recoil/userAtom';
-import { useRecoilState } from 'recoil';
+"use client";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
+import { useRecoilState } from "recoil";
+import { emailAtom } from "@/recoil-persist/emailAtom";
 
 export default function Page() {
   const router = useRouter();
-  const [user, setUser] = useRecoilState(userState);
-  console.log(user.email);
+  const [email, setEmail] = useRecoilState(emailAtom);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-black via-zinc-900 to-zinc-950 text-white">
       <header className="flex justify-between items-center p-6 border-b border-zinc-800">
-        <a href="/" className="text-3xl font-bold tracking-tight text-blue-500">
-          Chess Bot Com | {user?.email}
+        <a href="/" className="text-3xl font-bold text-blue-500">
+          Chess Bot Com | <span>{isMounted ? email : ""}</span>
         </a>
         <div className="space-x-4">
           <Button
-            className="px-6 py-3 text-white
-       bg-gradient-to-l from-neutral-900 to-neutral-950 hover:bg-neutral-500 text-lg font-semibold rounded-lg
-       border border-zinc-800 transition-all duration-150"
-            onClick={() => router.push('/profile')}
+            className="px-6 py-2 bg-black border border-neutral-700 rounded-lg"
+            onClick={() => router.push("/home/profile")}
           >
             Profile
           </Button>
           <Button
-            className="px-6 py-3 text-white
-       bg-gradient-to-l from-neutral-900 to-neutral-950 hover:bg-neutral-800 text-lg font-semibold rounded-lg
-       border border-zinc-800"
-            onClick={() => router.push('/history')}
+            className="px-6 py-2 bg-black border border-neutral-700 rounded-lg"
+            onClick={() => router.push("/home/history")}
           >
             History
           </Button>
           <a
             href="/api/auth/signout"
-            className="w-64 px-8 py-4 text-white
-       bg-gradient-to-l from-red-900 to-red-950 hover:bg-red-800 text-lg font-semibold rounded-lg
-       border border-zinc-800"
+            className="px-6 py-2 bg-red-800 border border-neutral-700 rounded-lg"
           >
             SignOut
           </a>
@@ -54,22 +52,21 @@ export default function Page() {
 
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
           <Button
-            className="w-64 px-8 py-4 text-white
-       bg-gradient-to-l from-neutral-900 to-neutral-950 hover:bg-neutral-800 text-lg font-semibold rounded-lg
+            className="w-64 px-8 py-3 text-white
+       bg-blue-600 text-lg font-semibold rounded-lg
        border border-zinc-800"
-            onClick={() => router.push('/home/random-game')}
+            onClick={() => router.push("/home/random-game")}
           >
             Random game
           </Button>
           <Button
-            className="w-64 px-8 py-4 text-white
-       bg-gradient-to-l from-neutral-900 to-neutral-950 hover:bg-neutral-800 text-lg font-semibold rounded-lg
+            className="w-64 px-8 py-3 text-white
+       bg-emerald-600 text-lg font-semibold rounded-lg
        border border-zinc-800"
-            onClick={() => router.push('/1v1')}
+            onClick={() => router.push("/1v1")}
           >
             Play 1v1
           </Button>
-          
         </div>
       </main>
 
