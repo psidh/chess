@@ -2,6 +2,11 @@
 
 Play Chess with your friends
 
+```bash
+#Run using this command
+ ./script.sh
+```
+
 Structure of the project
 
 ### Real-time Chess game : `backEnd-1`

@@ -101,9 +101,6 @@ export default function Page() {
 
   return (
     <div className="flex flex-col-reverse items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-800 to-neutral-900 p-12">
-      <a href="/api/auth/signout" className="bg-red-800 py-3 px-6 rounded-md">
-        signOut
-      </a>
       <ChessBoard
         setBoard={setBoard}
         chess={chess}
