@@ -70,40 +70,76 @@ export class Game {
     if (this.board.turn() === "w" && socket !== this.player1) return;
     if (this.board.turn() === "b" && socket !== this.player2) return;
 
-    const result = this.board.move(move);
+    let result;
 
-    if (!result) {
+    try {
+      result = this.board.move(move);
+    } catch (error: any) {
+      console.error("Error during move:", error.message); // Log the error
+      socket.send(
+        JSON.stringify({
+          type: ERROR,
+          payload: "Invalid move. Please try again",
+        })
+      );
+      return; // Stop the execution but allow the game to continue
+    }
+
+    if (result) {
+      const nextPlayer =
+        this.board.turn() === "w" ? this.player1 : this.player2;
+      nextPlayer.send(
+        JSON.stringify({
+          type: MOVE,
+          payload: move,
+        })
+      );
+
+      if (this.gameId) {
+        try {
+          const res = await prisma.move.create({
+            data: {
+              gameId: this.gameId,
+              from: move.from,
+              to: move.to,
+              color: color,
+            },
+          });
+          console.log(res);
+        } catch (error: any) {
+          console.log(error.message);
+        }
+      }
+
+      if (this.board.isGameOver()) {
+        const winner = this.board.turn() === "w" ? "black" : "white";
+        this.player1.send(
+          JSON.stringify({
+            type: GAME_OVER,
+            payload: { winner },
+          })
+        );
+        this.player2.send(
+          JSON.stringify({
+            type: GAME_OVER,
+            payload: { winner },
+          })
+        );
+
+        await prisma.game.update({
+          where: { gameId: this.gameId! },
+          data: {
+            winner,
+            endedAt: new Date(),
+          },
+        });
+      }
+    } else {
       console.log("Invalid move:", move);
       socket.send(
         JSON.stringify({
           type: ERROR,
-          payload: "Invalid move",
-        })
-      );
-    }
-
-    const nextPlayer = this.board.turn() === "w" ? this.player1 : this.player2;
-    nextPlayer.send(
-      JSON.stringify({
-        type: MOVE,
-        payload: move,
-      })
-    );
-
-    console.log("Move was made: ", move);
-
-    if (this.board.isGameOver()) {
-      const winner = this.board.turn() === "w" ? "black" : "white";
-      this.player1.send(
-        JSON.stringify({
-          type: GAME_OVER,
-          payload: { winner },
-        })
-      );
-      this.player2.send(
-        JSON.stringify({
-          type: GAME_OVER,
-          payload: { winner },
+          payload: "Invalid move. Please try again",
         })
       );
     }

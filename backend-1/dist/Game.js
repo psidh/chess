@@ -60,29 +60,64 @@ class Game {
                 return;
             if (this.board.turn() === "b" && socket !== this.player2)
                 return;
-            const result = this.board.move(move);
-            if (!result) {
+            let result;
+            try {
+                result = this.board.move(move);
+            }
+            catch (error) {
+                console.error("Error during move:", error.message); // Log the error
+                socket.send(JSON.stringify({
+                    type: Messages_1.ERROR,
+                    payload: "Invalid move. Please try again",
+                }));
+                return; // Stop the execution but allow the game to continue
+            }
+            if (result) {
+                const nextPlayer = this.board.turn() === "w" ? this.player1 : this.player2;
+                nextPlayer.send(JSON.stringify({
+                    type: Messages_1.MOVE,
+                    payload: move,
+                }));
+                if (this.gameId) {
+                    try {
+                        const res = yield prisma.move.create({
+                            data: {
+                                gameId: this.gameId,
+                                from: move.from,
+                                to: move.to,
+                                color: color,
+                            },
+                        });
+                        console.log(res);
+                    }
+                    catch (error) {
+                        console.log(error.message);
+                    }
+                }
+                if (this.board.isGameOver()) {
+                    const winner = this.board.turn() === "w" ? "black" : "white";
+                    this.player1.send(JSON.stringify({
+                        type: Messages_1.GAME_OVER,
+                        payload: { winner },
+                    }));
+                    this.player2.send(JSON.stringify({
+                        type: Messages_1.GAME_OVER,
+                        payload: { winner },
+                    }));
+                    yield prisma.game.update({
+                        where: { gameId: this.gameId },
+                        data: {
+                            winner,
+                            endedAt: new Date(),
+                        },
+                    });
+                }
+            }
+            else {
                 console.log("Invalid move:", move);
                 socket.send(JSON.stringify({
                     type: Messages_1.ERROR,
-                    payload: "Invalid move",
-                }));
-            }
-            const nextPlayer = this.board.turn() === "w" ? this.player1 : this.player2;
-            nextPlayer.send(JSON.stringify({
-                type: Messages_1.MOVE,
-                payload: move,
-            }));
-            console.log("Move was made: ", move);
-            if (this.board.isGameOver()) {
-                const winner = this.board.turn() === "w" ? "black" : "white";
-                this.player1.send(JSON.stringify({
-                    type: Messages_1.GAME_OVER,
-                    payload: { winner },
-                }));
-                this.player2.send(JSON.stringify({
-                    type: Messages_1.GAME_OVER,
-                    payload: { winner },
+                    payload: "Invalid move. Please try again",
                 }));
             }
         });

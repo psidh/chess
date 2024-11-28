@@ -16,8 +16,8 @@ export const ERROR = "error";
 
 export default function Page() {
   const session = useSession();
-  const [email, setEmail] = useRecoilState(emailAtom); // Manage email state via Recoil
-  const socket = useSocket(); // Hook will initialize socket based on email
+  const [email, setEmail] = useRecoilState(emailAtom);
+  const socket = useSocket();
   const [chess, setChess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
   const [start, setStart] = useState(false);
@@ -30,6 +30,10 @@ export default function Page() {
       const message = JSON.parse(event.data);
 
       switch (message.type) {
+        case ERROR:
+          toast.error(message.payload);
+          break;
+          
         case INIT_GAME:
           setChess(new Chess());
           setBoard(chess.board());
@@ -52,8 +56,6 @@ export default function Page() {
           toast.success(`Game Over! Winner is ${winner}`);
           break;
 
-        case ERROR:
-          toast.error(ERROR);
         default:
           alert("Unknown message type:", message.type);
       }

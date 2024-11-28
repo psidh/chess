@@ -2,11 +2,15 @@
 
 Play Chess with your friends
 
-### Real-time Chess game : `BackEnd-1`
+Structure of the project
 
-### User Authentication : `BackEnd 2`
+### Real-time Chess game : `backEnd-1`
 
-### Chess Board : `FrontEnd 2`
+### User Authentication : `backEnd 2`
+
+### Chess Board : `frontEnd`
+
+### ValKey (beta v) : `pub-sub`
 
 - Tech Stack: Node.js, WebSockets, Chess.js, Next.js
 
