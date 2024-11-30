@@ -1,28 +1,26 @@
-'use client';
-import React from 'react';
-import { SiGithub } from 'react-icons/si';
-import { FaChess } from 'react-icons/fa';
-import Button from '@/components/Button';
-import { useRouter } from 'next/navigation';
+"use client";
+import React from "react";
+import { SiGithub } from "react-icons/si";
+import { FaChess } from "react-icons/fa";
+import Button from "@/components/Button";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white">
-      <div className="w-1/2 h-full relative">
-        <img
-          src="/chess.webp"
-          alt="Chess Visual"
-          className="w-full h-full object-cover opacity-90"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-      </div>
+    <div className="flex flex-col md:flex-row h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white">
+      <img
+        src="/chess.webp"
+        alt="Chess Visual"
+        className="w-full md:w-1/2 h-full  object-cover opacity-90"
+      />
 
-      <div className="w-1/2 flex flex-col justify-center p-16 space-y-8">
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-8 space-y-8">
         <div className="space-y-4">
           <h1 className="text-6xl font-bold tracking-tight leading-snug">
-            Welcome to  <br/> <span className="text-blue-500">Chess Bot Com</span>
+            Welcome to <br />{" "}
+            <span className="text-blue-500">Chess Bot Com</span>
           </h1>
           <p className="text-lg text-neutral-300">
             Play with your friends or random opponents. Outsmart your rivals and
@@ -33,7 +31,7 @@ export default function Page() {
         <div className="flex space-x-6">
           <Button
             className="w-48 py-3 text-lg bg-blue-600 hover:bg-blue-700 rounded-lg font-medium"
-            onClick={() => router.push('/home')}
+            onClick={() => router.push("/home")}
           >
             Play Now
           </Button>

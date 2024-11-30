@@ -16,33 +16,34 @@ export default function Page() {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-black via-zinc-900 to-zinc-950 text-white">
-      <header className="flex justify-between items-center p-6 border-b border-zinc-800">
-        <a href="/" className="text-3xl font-bold text-blue-500">
-          Chess Bot Com | <span>{isMounted ? email : ""}</span>
+      <header className="flex justify-between items-center p-4 border-b border-zinc-800">
+        <a href="/" className="text-2xl font-bold text-blue-500">
+          Chess Bot Com
         </a>
-        <div className="space-x-4">
+        <div className="space-x-2 font-medium">
           <Button
-            className="px-6 py-2 bg-black border border-neutral-700 rounded-lg"
+            className="px-4 py-2 bg-black border border-neutral-700 rounded-lg"
             onClick={() => router.push("/home/profile")}
           >
             Profile
           </Button>
           <Button
-            className="px-6 py-2 bg-black border border-neutral-700 rounded-lg"
+            className="px-4 py-2 bg-black border border-neutral-700 rounded-lg"
             onClick={() => router.push("/home/history")}
           >
             History
           </Button>
           <a
             href="/api/auth/signout"
-            className="px-6 py-2 bg-red-800 border border-neutral-700 rounded-lg"
+            className="px-4 py-2 border-red-800 bg-red-950 border rounded-lg"
           >
             SignOut
           </a>
         </div>
       </header>
 
-      <main className="flex flex-col items-center justify-center flex-grow p-8 space-y-8">
+      <main className="flex flex-col items-center justify-center flex-grow p-6 space-y-4">
+        <img src="/chess.svg" alt="" className="w-1/2" />
         <h2 className="text-4xl font-extrabold tracking-wide">
           Ready to Play Chess?
         </h2>
@@ -53,7 +54,7 @@ export default function Page() {
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
           <Button
             className="w-64 px-8 py-3 text-white
-       bg-blue-600 text-lg font-semibold rounded-lg
+       bg-gradient-to-r from-blue-900/20 via-blue-950 to-blue-950/20 text-lg font-semibold rounded-lg
        border border-zinc-800"
             onClick={() => router.push("/home/random-game")}
           >
@@ -61,7 +62,7 @@ export default function Page() {
           </Button>
           <Button
             className="w-64 px-8 py-3 text-white
-       bg-emerald-600 text-lg font-semibold rounded-lg
+       bg-gradient-to-r from-sky-900/20 via-sky-950 to-sky-950/20 text-lg font-semibold rounded-lg
        border border-zinc-800"
             onClick={() => router.push("/1v1")}
           >
