@@ -1,53 +1,42 @@
 # Chess
 
-Play Chess with your friends
+Play Chess with your friends or against the computer.
+
+---
+
+### Starting the project locally
 
 ```bash
-#Run using this command
- ./script.sh
+git clone https://github.com/psidh/chess.git
 ```
 
-Structure of the project
+```bash
+cd chess
+```
 
-### Real-time Chess game : `backEnd-1`
+```bash
+./frontend.sh
+./backend-1.sh
+./backend-2.sh
+```
 
-### User Authentication : `backEnd 2`
+---
 
-### Chess Board : `frontEnd`
+## Structure of the project
 
-### ValKey (beta v) : `pub-sub`
+- Real-time Chess game : **backend-1**
 
-- Tech Stack: Node.js, WebSockets, Chess.js, Next.js
+- User Authentication : **backend 2**
+
+- Chess Board : **frontend**
+
+- Against Computer : **agi-server**
+
+- Tech Stack: WebSockets, Chess.js, Express, Prisma, PostgreSQL, Next.js, Docker, Google GenAI
+
+---
 
 ### Issues to be resolved
-
-## Landing Page
-
-- [x] Create a landing page.
-- [x] Add a "Play" button on the landing page.
-- [x] Ensure user authentication is required to play.
-
----
-
-## Game Screen Routes
-
-- [x] Design the game screen layout.
-  - [x] Add **3 buttons**:
-    - [x] **Random Game**
-    - [x] **Play 1v1**
-    - [x] **Profile**
-    - [x] **History**
-
----
-
-## Random Game
-
-- [x] On selecting **Random Game**:
-  - [x] Add the user to a **pending user** queue.
-  - [x] Match with another user upon their arrival.
-  - [x] Start the game when two users are matched.
-
----
 
 ## Play 1v1
 
@@ -61,21 +50,13 @@ Structure of the project
 
 ## Game Features
 
-- [ ] Implement **notifications** for board updates.
 - [ ] Enable **ESC** to undo the last action or deselect elements.
 - [ ] Highlight board pieces when selected.
-- [ ] Handle **checkmate**:
-  - [ ] Display appropriate messages.
   - [ ] Redirect the user to the `/home` page.
 - [ ] Add the following options:
   - [ ] **Draw**
   - [ ] **Resign**
 
 ---
-
-## Data Persistence
-
-- [ ] Store all game data in a database.
-- [ ] Optimize database interactions for faster performance.
 
 ## License [MIT](/LICENSE)
