@@ -22,6 +22,7 @@ export default function Page() {
   const [board, setBoard] = useState(chess.board());
   const [start, setStart] = useState(false);
   const [buttonState, setButtonState] = useState("New Game");
+  const [color, setColor] = useState("");
 
   useEffect(() => {
     if (!socket) return;
@@ -33,13 +34,16 @@ export default function Page() {
         case ERROR:
           toast.error(message.payload);
           break;
-          
+
         case INIT_GAME:
           setChess(new Chess());
           setBoard(chess.board());
           toast.success(
             `Game initialized with color: ${message.payload.color}`
           );
+          console.log(message.payload.color);
+
+          setColor(message.payload.color);
           setStart(true);
           setButtonState("Over");
           break;
@@ -107,6 +111,7 @@ export default function Page() {
         socket={socket}
         board={board}
         email={session.data.user.email}
+        color={color}
       />
 
       {!start && (

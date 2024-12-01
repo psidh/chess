@@ -27,12 +27,6 @@ export default function Page() {
           >
             Profile
           </Button>
-          <Button
-            className="px-4 py-2 bg-black border border-neutral-700 rounded-lg"
-            onClick={() => router.push("/home/history")}
-          >
-            History
-          </Button>
           <a
             href="/api/auth/signout"
             className="px-4 py-2 border-red-800 bg-red-950 border rounded-lg"
