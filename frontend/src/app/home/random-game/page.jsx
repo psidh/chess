@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import UserCard from "@/components/UserCard";
 
 export const INIT_GAME = "init_game";
 export const MOVE = "move";
@@ -26,6 +27,14 @@ export default function Page() {
   const [buttonState, setButtonState] = useState("New Game");
   const [color, setColor] = useState("");
   const [gameOver, setGameOver] = useState(false);
+  const [opponent, setOpponent] = useState({
+    email: "",
+    rating: 0,
+  });
+  const [user, setUser] = useState({
+    email: "",
+    rating: 0,
+  });
 
   useEffect(() => {
     if (!socket) return;
@@ -45,7 +54,8 @@ export default function Page() {
             `Game initialized with color: ${message.payload.color}`
           );
           console.log(message.payload.color);
-
+          setOpponent(message.payload.opponent);
+          setUser(message.payload.you);
           setColor(message.payload.color);
           setStart(true);
           setButtonState("Over");
@@ -60,6 +70,7 @@ export default function Page() {
 
         case GAME_OVER:
           const { winner } = message.payload;
+          setGameOver(true)
           toast.success(`Game Over! Winner is ${winner}`);
           break;
 
@@ -107,7 +118,8 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col-reverse items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-800 to-neutral-900 p-12">
+    <div className="flex flex-col-reverse items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
+      <UserCard who={"opp"} email={opponent.email} rating={opponent.rating} />
       <ChessBoard
         setBoard={setBoard}
         chess={chess}
@@ -116,7 +128,11 @@ export default function Page() {
         email={session.data.user.email}
         color={color}
       />
-
+      <UserCard
+        who={"you"}
+        email={session.data?.user?.email}
+        rating={user.rating}
+      />
       {!start && (
         <Button
           onClick={handleNewGame}

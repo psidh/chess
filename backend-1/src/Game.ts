@@ -3,6 +3,7 @@ import { WebSocket } from "ws";
 import { ERROR, GAME_OVER, INIT_GAME, MOVE } from "./Messages";
 // import { getColor } from './utils/Color';
 import { PrismaClient } from "@prisma/client";
+import { User } from "./interfaces";
 
 const prisma = new PrismaClient();
 
@@ -12,25 +13,42 @@ export class Game {
   private board: Chess;
   private startTime: Date;
   private gameId: number | null = null;
+  private user1: User = {
+    email: "",
+    rating: 0,
+  };
+  private user2: User = {
+    email: "",
+    rating: 0,
+  };
 
   constructor(
     player1: WebSocket,
     player2: WebSocket,
     player1Id: number,
-    player2Id: number
+    player2Id: number,
+    user1: User,
+    user2: User
   ) {
     this.player1 = player1;
     this.player2 = player2;
     this.board = new Chess();
     this.startTime = new Date();
+    this.user1 = user1;
+    this.user2 = user2;
 
     this.initializeGame(player1Id, player2Id);
+
+    console.log("User 1: " + user1.email);
+    console.log("User 2: " + user2.email);
 
     this.player1.send(
       JSON.stringify({
         type: INIT_GAME,
         payload: {
           color: "white",
+          opponent: user2,
+          you: user1,
         },
       })
     );
@@ -40,6 +58,8 @@ export class Game {
         type: INIT_GAME,
         payload: {
           color: "black",
+          opponent: user1,
+          you: user2,
         },
       })
     );
@@ -82,7 +102,7 @@ export class Game {
           payload: "Invalid move. Please try again",
         })
       );
-      return; // Stop the execution but allow the game to continue
+      return;
     }
 
     if (result) {
@@ -133,6 +153,37 @@ export class Game {
             endedAt: new Date(),
           },
         });
+
+        // const currentGame = await prisma.game.findFirst({
+        //   where: {
+        //     gameId: this.gameId!,
+        //   },
+        // });
+
+        // const player1Id = currentGame.player1Id;
+        // const player2Id = currentGame.player2Id;
+
+        // await prisma.user.update({
+        //   where: {
+        //     userId: player1Id!,
+        //   },
+        //   data: {
+        //     rating: {
+        //       increment: 50,
+        //     },
+        //   },
+        // });
+
+        // await prisma.user.update({
+        //   where: {
+        //     userId: player1Id!,
+        //   },
+        //   data: {
+        //     rating: {
+        //       increment: 50,
+        //     },
+        //   },
+        // });
       }
     } else {
       console.log("Invalid move:", move);

@@ -16,23 +16,39 @@ const Messages_1 = require("./Messages");
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class Game {
-    constructor(player1, player2, player1Id, player2Id) {
+    constructor(player1, player2, player1Id, player2Id, user1, user2) {
         this.gameId = null;
+        this.user1 = {
+            email: "",
+            rating: 0,
+        };
+        this.user2 = {
+            email: "",
+            rating: 0,
+        };
         this.player1 = player1;
         this.player2 = player2;
         this.board = new chess_js_1.Chess();
         this.startTime = new Date();
+        this.user1 = user1;
+        this.user2 = user2;
         this.initializeGame(player1Id, player2Id);
+        console.log("User 1: " + user1.email);
+        console.log("User 2: " + user2.email);
         this.player1.send(JSON.stringify({
             type: Messages_1.INIT_GAME,
             payload: {
                 color: "white",
+                opponent: user2,
+                you: user1,
             },
         }));
         this.player2.send(JSON.stringify({
             type: Messages_1.INIT_GAME,
             payload: {
                 color: "black",
+                opponent: user1,
+                you: user2,
             },
         }));
     }
@@ -70,7 +86,7 @@ class Game {
                     type: Messages_1.ERROR,
                     payload: "Invalid move. Please try again",
                 }));
-                return; // Stop the execution but allow the game to continue
+                return;
             }
             if (result) {
                 const nextPlayer = this.board.turn() === "w" ? this.player1 : this.player2;
@@ -111,6 +127,33 @@ class Game {
                             endedAt: new Date(),
                         },
                     });
+                    // const currentGame = await prisma.game.findFirst({
+                    //   where: {
+                    //     gameId: this.gameId!,
+                    //   },
+                    // });
+                    // const player1Id = currentGame.player1Id;
+                    // const player2Id = currentGame.player2Id;
+                    // await prisma.user.update({
+                    //   where: {
+                    //     userId: player1Id!,
+                    //   },
+                    //   data: {
+                    //     rating: {
+                    //       increment: 50,
+                    //     },
+                    //   },
+                    // });
+                    // await prisma.user.update({
+                    //   where: {
+                    //     userId: player1Id!,
+                    //   },
+                    //   data: {
+                    //     rating: {
+                    //       increment: 50,
+                    //     },
+                    //   },
+                    // });
                 }
             }
             else {

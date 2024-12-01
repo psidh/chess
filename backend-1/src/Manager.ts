@@ -2,6 +2,7 @@ import { WebSocket } from "ws";
 import { INIT_GAME, MOVE } from "./Messages";
 import { Game } from "./Game";
 import { PrismaClient } from "@prisma/client";
+import { User } from "./interfaces";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,14 @@ export class Manager {
   private games: Game[];
   private pendingUser: { socket: WebSocket; userId: number } | null;
   private users: { socket: WebSocket; userId: number }[];
+  private user1: User = {
+    email: "",
+    rating: 0,
+  };
+  private user2: User = {
+    email: "",
+    rating: 0,
+  };
 
   constructor() {
     this.games = [];
@@ -25,7 +34,18 @@ export class Manager {
       }
 
       this.users.push({ socket, userId: user.userId });
-      console.log("User added into the queue:", user.userId);
+      if (this.user1.email === "") {
+        console.log("under user1 log: " + user.email);
+
+        this.user1.email = user.email;
+        this.user1.rating = user.rating;
+        console.log(this.user1);
+      } else {
+        console.log(user.email);
+        this.user2.email = user.email;
+        this.user2.rating = user.rating;
+        console.log(this.user2);
+      }
 
       this.matchMaker(socket, user.userId);
     } catch (error) {
@@ -47,7 +67,9 @@ export class Manager {
             this.pendingUser?.socket,
             socket,
             this.pendingUser?.userId,
-            userId
+            userId,
+            this.user1,
+            this.user2
           );
 
           this.games.push(game);
@@ -59,7 +81,7 @@ export class Manager {
           this.pendingUser = null;
         } else {
           this.pendingUser = { socket, userId };
-          console.log("User added to pending queue:", userId);
+          // console.log("User added to pending queue:", userId);
         }
       }
 

@@ -51,10 +51,10 @@ export default function ChessBoard({
               <div
                 key={colIndex}
                 onClick={() => handleSquareClick(squareRepresentation)}
-                className={`w-16 h-16 flex items-center justify-center ${
+                className={`w-[72px] h-[72px] flex items-center justify-center ${
                   (rowIndex + colIndex) % 2 === 0
-                    ? "bg-[#68ab41]"
-                    : "bg-[#DBFFD0FF]"
+                    ? "bg-[#5f4cb3]"
+                    : "bg-[#dbd5f8]"
                 } ${color === "black" ? "transform rotate-180" : ""}`}
               >
                 {square ? (
@@ -65,7 +65,7 @@ export default function ChessBoard({
                         : `${square.type.toUpperCase()} White.png`
                     )}`}
                     alt="chess-piece"
-                    className={`w-8 h-8}`}
+                    className={`w-10 h-10}`}
                   />
                 ) : null}
               </div>

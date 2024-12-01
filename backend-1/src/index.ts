@@ -11,8 +11,6 @@ ws.on("connection", (socket, req) => {
   const email = parsedUrl.query?.email;
 
   if (email) {
-    console.log(`User connected with email: ${email}`);
-
     manager.addUser(socket, email);
   } else {
     console.log("Connection attempted without email");

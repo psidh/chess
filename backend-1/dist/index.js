@@ -11,7 +11,6 @@ ws.on("connection", (socket, req) => {
     //@ts-ignore
     const email = (_a = parsedUrl.query) === null || _a === void 0 ? void 0 : _a.email;
     if (email) {
-        console.log(`User connected with email: ${email}`);
         manager.addUser(socket, email);
     }
     else {

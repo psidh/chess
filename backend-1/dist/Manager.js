@@ -16,6 +16,14 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class Manager {
     constructor() {
+        this.user1 = {
+            email: "",
+            rating: 0,
+        };
+        this.user2 = {
+            email: "",
+            rating: 0,
+        };
         this.games = [];
         this.pendingUser = null;
         this.users = [];
@@ -29,7 +37,18 @@ class Manager {
                     return;
                 }
                 this.users.push({ socket, userId: user.userId });
-                console.log("User added into the queue:", user.userId);
+                if (this.user1.email === "") {
+                    console.log("under user1 log: " + user.email);
+                    this.user1.email = user.email;
+                    this.user1.rating = user.rating;
+                    console.log(this.user1);
+                }
+                else {
+                    console.log(user.email);
+                    this.user2.email = user.email;
+                    this.user2.rating = user.rating;
+                    console.log(this.user2);
+                }
                 this.matchMaker(socket, user.userId);
             }
             catch (error) {
@@ -46,14 +65,14 @@ class Manager {
             const message = JSON.parse(data.toString());
             if (message.type === Messages_1.INIT_GAME) {
                 if (this.pendingUser) {
-                    const game = new Game_1.Game((_a = this.pendingUser) === null || _a === void 0 ? void 0 : _a.socket, socket, (_b = this.pendingUser) === null || _b === void 0 ? void 0 : _b.userId, userId);
+                    const game = new Game_1.Game((_a = this.pendingUser) === null || _a === void 0 ? void 0 : _a.socket, socket, (_b = this.pendingUser) === null || _b === void 0 ? void 0 : _b.userId, userId, this.user1, this.user2);
                     this.games.push(game);
                     console.log("Game initialized with players:", this.pendingUser.userId, userId);
                     this.pendingUser = null;
                 }
                 else {
                     this.pendingUser = { socket, userId };
-                    console.log("User added to pending queue:", userId);
+                    // console.log("User added to pending queue:", userId);
                 }
             }
             if (message.type === Messages_1.MOVE) {
