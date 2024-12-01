@@ -7,6 +7,7 @@ import { useSocket } from "@/hooks/useSocket";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Chess } from "chess.js";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export const INIT_GAME = "init_game";
@@ -15,6 +16,7 @@ export const GAME_OVER = "game_over";
 export const ERROR = "error";
 
 export default function Page() {
+  const router = useRouter();
   const session = useSession();
   const [email, setEmail] = useRecoilState(emailAtom);
   const socket = useSocket();
@@ -23,6 +25,7 @@ export default function Page() {
   const [start, setStart] = useState(false);
   const [buttonState, setButtonState] = useState("New Game");
   const [color, setColor] = useState("");
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     if (!socket) return;
@@ -121,6 +124,18 @@ export default function Page() {
         >
           {buttonState}
         </Button>
+      )}
+      {gameOver ? (
+        <button
+          onClick={() => {
+            router.push("/home");
+          }}
+          className="bg-neutral-800 border border-neutral-600 py-3 px-6 rounded-md"
+        >
+          Get Back to Home
+        </button>
+      ) : (
+        <div></div>
       )}
     </div>
   );
