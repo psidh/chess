@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${inter.variable} antialiased bg-neutral-900 text-white`}
+        className={`${inter.variable} ${inter.variable} antialiased bg-black text-white`}
       >
         <Providers>
           <RecoilRoot>

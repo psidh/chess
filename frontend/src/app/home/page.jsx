@@ -43,7 +43,7 @@ export default function Page() {
       </header>
 
       <main className="flex flex-col items-center justify-center flex-grow p-6 space-y-4">
-        <img src="/chess.svg" alt="" className="w-1/2" />
+        <img src="/chess.svg" alt="" className="w-1/2 md:w-[30%]" />
         <h2 className="text-4xl font-extrabold tracking-wide">
           Ready to Play Chess?
         </h2>
@@ -54,7 +54,7 @@ export default function Page() {
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
           <Button
             className="w-64 px-8 py-3 text-white
-       bg-gradient-to-r from-blue-900/20 via-blue-950 to-blue-950/20 text-lg font-semibold rounded-lg
+       bg-gradient-to-r from-blue-800/20 via-blue-800 to-blue-800/20 text-lg font-semibold rounded-lg
        border border-zinc-800"
             onClick={() => router.push("/home/random-game")}
           >
@@ -62,7 +62,7 @@ export default function Page() {
           </Button>
           <Button
             className="w-64 px-8 py-3 text-white
-       bg-gradient-to-r from-sky-900/20 via-sky-950 to-sky-950/20 text-lg font-semibold rounded-lg
+       bg-gradient-to-r from-sky-800/20 via-sky-800 to-sky-800/20 text-lg font-semibold rounded-lg
        border border-zinc-800"
             onClick={() => router.push("/1v1")}
           >
