@@ -5,35 +5,35 @@ import { PrismaClient } from "@prisma/client";
 const app = express();
 const prisma = new PrismaClient();
 
-const allowedOrigins = [
-  "https://chess-iota-eight.vercel.app", // Deployed frontend
-  "http://localhost:3000", // Local testing
-];
+// const allowedOrigins = [
+//   "https://chess-iota-eight.vercel.app", // Deployed frontend
+//   "http://localhost:3000", // Local testing
+// ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.includes(origin)) {
+//         return callback(null, true);
+//       } else {
+//         return callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ["GET", "POST"],
+//     allowedHeaders: ["Content-Type"],
+//     credentials: true,
+//   })
+// );
 
-app.options("*", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.status(204).end();
-});
-
+// app.options("*", (req, res) => {
+//   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.status(204).end();
+// });
+app.use(cors());
 app.use(express.json());
 
 app.post("/api/auth/user", async (req, res): Promise<any> => {
