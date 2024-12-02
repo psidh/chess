@@ -7,7 +7,9 @@ const prisma = new PrismaClient();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://chess-iota-eight.vercel.app",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
