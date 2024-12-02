@@ -5,61 +5,71 @@ import { PrismaClient } from "@prisma/client";
 const app = express();
 const prisma = new PrismaClient();
 
+// Allowed origins for CORS
 const allowedOrigins = [
   "https://chess-iota-eight.vercel.app", // Deployed frontend
   "http://localhost:3000", // Local testing
 ];
 
+// Middleware for logging all incoming requests
+app.use((req, res, next) => {
+  console.log(
+    `[Request] Method: ${req.method}, Origin: ${req.headers.origin}, Path: ${req.path}`
+  );
+  next();
+});
+
+// CORS configuration
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
       } else {
-        return callback(new Error("Not allowed by CORS"));
+        callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true,
+    methods: ["GET", "POST", "OPTIONS"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type"], // Allowed request headers
+    credentials: true, // Allow credentials (cookies, auth headers)
   })
 );
 
+// Explicitly handle preflight requests
 app.options("*", (req, res) => {
-  console.log("Handling preflight request for:", req.headers.origin);
   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.status(204).end();
+  res.status(204).end(); // No content
 });
 
-app.use((req, res, next) => {
-  res.setHeader("X-Debug-Origin", req.headers.origin || "unknown");
-  res.setHeader("X-Debug-Path", req.path);
-  console.log(`[Request] Origin: ${req.headers.origin}, Path: ${req.path}`);
-  next();
-});
-
+// Middleware to parse incoming JSON requests
 app.use(express.json());
 
+// API: Authenticate user
 app.post("/api/auth/user", async (req, res): Promise<any> => {
   try {
     const { email } = req.body;
-    console.log("email:", email);
+    console.log("email: " + email);
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
     if (user) {
-      console.log("Existing user:", user);
+      console.log(user);
       return res
         .status(201)
         .json({ message: "Logged In Successfully", status: 201 });
     } else {
       const newUser = await prisma.user.create({
-        data: { email, createdAt: new Date() },
+        data: {
+          email,
+          createdAt: new Date(),
+        },
       });
-      console.log("New user created:", newUser);
+      console.log(newUser);
       return res
         .status(201)
         .json({ message: "Created Account Successfully", user: newUser });
@@ -72,6 +82,7 @@ app.post("/api/auth/user", async (req, res): Promise<any> => {
   }
 });
 
+// API: User profile with stats
 app.post("/api/profile", async (req, res): Promise<any> => {
   try {
     const { email } = req.body;
@@ -82,7 +93,7 @@ app.post("/api/profile", async (req, res): Promise<any> => {
         asPlayer1: {
           include: { player2: true },
           orderBy: { startedAt: "desc" },
-          take: 5,
+          take: 5, // Limit to 5 recent games
         },
         asPlayer2: {
           include: { player1: true },
@@ -93,7 +104,7 @@ app.post("/api/profile", async (req, res): Promise<any> => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found", status: 404 });
     }
 
     const totalGames = user.asPlayer1.length + user.asPlayer2.length;
@@ -102,7 +113,22 @@ app.post("/api/profile", async (req, res): Promise<any> => {
       user.asPlayer2.filter((game) => game.winner === user.email).length;
     const losses = totalGames - wins;
 
-    return res.status(200).json({
+    const recentGames = [
+      ...user.asPlayer1.map((game) => ({
+        opponent: game.player2.email,
+        result: game.winner === user.email ? "Win" : "Loss",
+        startedAt: game.startedAt,
+        endedAt: game.endedAt,
+      })),
+      ...user.asPlayer2.map((game) => ({
+        opponent: game.player1.email,
+        result: game.winner === user.email ? "Win" : "Loss",
+        startedAt: game.startedAt,
+        endedAt: game.endedAt,
+      })),
+    ].slice(0, 5);
+
+    return res.json({
       user: {
         email: user.email,
         rating: user.rating,
@@ -110,21 +136,9 @@ app.post("/api/profile", async (req, res): Promise<any> => {
         totalGames,
         wins,
         losses,
-        recentGames: [
-          ...user.asPlayer1.map((game) => ({
-            opponent: game.player2.email,
-            result: game.winner === user.email ? "Win" : "Loss",
-            startedAt: game.startedAt,
-            endedAt: game.endedAt,
-          })),
-          ...user.asPlayer2.map((game) => ({
-            opponent: game.player1.email,
-            result: game.winner === user.email ? "Win" : "Loss",
-            startedAt: game.startedAt,
-            endedAt: game.endedAt,
-          })),
-        ].slice(0, 5),
+        recentGames,
       },
+      status: 201,
     });
   } catch (error: any) {
     console.error("Error:", error.message);
@@ -134,7 +148,8 @@ app.post("/api/profile", async (req, res): Promise<any> => {
   }
 });
 
-const PORT = process.env.PORT || 3002;
+// Start the server
+const PORT = 3002;
 app.listen(PORT, () => {
-  console.log(`Backend listening at ${PORT}`);
+  console.log(`Backend listening on port ${PORT}`);
 });
