@@ -34,20 +34,22 @@ class CustomGame {
         this.user2 = user2;
         this.gameId = gameId;
         this.initializeGame(player1Id, player2Id, gameId);
+        console.log("You :" + user1.email);
+        console.log("Opponent :" + user2.email);
         this.player1.send(JSON.stringify({
             type: Messages_1.INIT_CUSTOM_GAME,
             payload: {
                 color: "white",
-                opponent: user2,
-                you: user1,
+                opponent: this.user2,
+                you: this.user1,
             },
         }));
         this.player2.send(JSON.stringify({
             type: Messages_1.INIT_CUSTOM_GAME,
             payload: {
                 color: "black",
-                opponent: user1,
-                you: user2,
+                opponent: this.user1,
+                you: this.user2,
             },
         }));
     }

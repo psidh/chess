@@ -39,16 +39,16 @@ export class Game {
 
     this.initializeGame(player1Id, player2Id);
 
-    console.log("User 1: " + user1.email);
-    console.log("User 2: " + user2.email);
+    console.log("User 1: " + this.user1.email);
+    console.log("User 2: " + this.user2.email);
 
     this.player1.send(
       JSON.stringify({
         type: INIT_GAME,
         payload: {
           color: "white",
-          opponent: user2,
-          you: user1,
+          opponent: this.user2,
+          you: this.user1,
         },
       })
     );
@@ -58,8 +58,8 @@ export class Game {
         type: INIT_GAME,
         payload: {
           color: "black",
-          opponent: user1,
-          you: user2,
+          opponent: this.user1,
+          you: this.user2,
         },
       })
     );

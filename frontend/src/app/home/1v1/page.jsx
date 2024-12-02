@@ -92,7 +92,6 @@ export default function Page() {
     }
 
     if (!socket) {
-      console.log(socket.url);
       setEmail(session.data.user.email);
     } else if (socket.readyState === WebSocket.OPEN) {
       let code1 = +Array.from({ length: 8 }, () =>
@@ -129,7 +128,7 @@ export default function Page() {
           type: INIT_CUSTOM_GAME,
           payload: {
             email: session.data.user.email,
-            code: enterCode, // Use the value of the input field here
+            code: enterCode,
           },
         })
       );
@@ -148,7 +147,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col-reverse items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
+    <div className="flex flex-col items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
       {start ? (
         <>
           <UserCard
