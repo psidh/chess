@@ -22,7 +22,7 @@ export default function Page() {
       setEmail(session.user.email);
       const fetchData = async () => {
         try {
-          const response = await fetch("http://localhost:3002/api/auth/user", {
+          const response = await fetch("https://chess-zji6.onrender.com/api/auth/user", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
