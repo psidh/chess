@@ -10,17 +10,13 @@ import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import UserCard from "@/components/UserCard";
-
-export const INIT_GAME = "init_game";
-export const MOVE = "move";
-export const GAME_OVER = "game_over";
-export const ERROR = "error";
+import { INIT_GAME , ERROR, INIT_CUSTOM_GAME, GAME_OVER, MOVE } from "@/lib/Messages";
 
 export default function Page() {
   const router = useRouter();
   const session = useSession();
   const [email, setEmail] = useRecoilState(emailAtom);
-  const socket = useSocket();
+  const socket = useSocket("random");
   const [chess, setChess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
   const [start, setStart] = useState(false);

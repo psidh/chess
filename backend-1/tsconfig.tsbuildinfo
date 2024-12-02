@@ -1,1 +1,1 @@
-{"root":["./src/game.ts","./src/manager.ts","./src/messages.ts","./src/index.ts","./src/interfaces.ts","./src/utils/color.ts"],"version":"5.7.2"}
+{"root":["./src/game.ts","./src/manager.ts","./src/messages.ts","./src/index.ts","./src/interfaces.ts","./src/custom/customgame.ts","./src/custom/custommanager.ts","./src/utils/color.ts"],"version":"5.7.2"}

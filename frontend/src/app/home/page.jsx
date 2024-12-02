@@ -58,7 +58,7 @@ export default function Page() {
             className="w-64 px-8 py-3 text-white
        bg-gradient-to-r from-sky-800/20 via-sky-800 to-sky-800/20 text-lg font-semibold rounded-lg
        border border-zinc-800"
-            onClick={() => router.push("/1v1")}
+            onClick={() => router.push("/home/1v1")}
           >
             Play 1v1
           </Button>
