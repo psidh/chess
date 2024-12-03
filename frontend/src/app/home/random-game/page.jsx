@@ -135,7 +135,7 @@ export default function Page() {
         />
         <UserCard
           who={"you"}
-          email={session.data?.user?.email}
+          email={user.email}
           rating={user.rating}
         />
         {!start && (

@@ -1,7 +1,7 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import Providers from "./providers";
+
 import RecoilRoot from "./RecoilRoot";
 const inter = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -18,12 +18,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${inter.variable} antialiased bg-black text-white`}
       >
-        <Providers>
-          <RecoilRoot>
-            <Toaster />
-            {children}
-          </RecoilRoot>
-        </Providers>
+        <RecoilRoot>
+          <Toaster />
+          {children}
+        </RecoilRoot>
       </body>
     </html>
   );

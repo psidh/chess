@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import UserCard from "@/components/UserCard";
 import { INIT_CUSTOM_GAME, ERROR, GAME_OVER, MOVE } from "@/lib/Messages";
+import Navbar from "@/components/Navbar";
 
 export default function Page() {
   const router = useRouter();
@@ -147,78 +148,77 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
-      {start ? (
-        <>
-          <UserCard
-            who={"opp"}
-            email={opponent.email}
-            rating={opponent.rating}
-          />
-          <ChessBoard
-            setBoard={setBoard}
-            chess={chess}
-            socket={socket}
-            board={board}
-            email={session.data.user.email}
-            color={color}
-          />
-          <UserCard
-            who={"you"}
-            email={session.data?.user?.email}
-            rating={user.rating}
-          />
-        </>
-      ) : (
-        <div className="grid grid-cols-2 gap-6">
-          {code ? (
-            <></>
-          ) : (
-            <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 gap-4 flex flex-col items-center justify-center">
-              <input
-                type="text"
-                title="code"
-                placeholder="Enter your code"
-                className="bg-neutral-800 border border-neutral-700 rounded focus:outline-neutral-700 p-2"
-                value={enterCode} // Bind the value of the input field to the state
-                onChange={(e) => setEnterCode(e.target.value)} // Update the state when the user types
-              />
-              <button
-                onClick={joinGame} // Call joinGame when button is clicked
-                className="w-full px-4 py-2 bg-green-800 border border-green-500 rounded-md"
-              >
-                Join Game
-              </button>
-            </div>
-          )}
-          <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 flex flex-col items-center justify-center">
-            <button
-              onClick={sendCode}
-              className="px-4 py-2 bg-green-800 border border-green-500 rounded-md"
-            >
-              {" "}
-              Generate Code
-            </button>
+    <>
+    <Navbar />
+      <div className="flex flex-col items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
+        {start ? (
+          <>
+            <UserCard
+              who={"opp"}
+              email={opponent.email}
+              rating={opponent.rating}
+            />
+            <ChessBoard
+              setBoard={setBoard}
+              chess={chess}
+              socket={socket}
+              board={board}
+              email={session.data.user.email}
+              color={color}
+            />
+            <UserCard who={"you"} email={user.email} rating={user.rating} />
+          </>
+        ) : (
+          <div className="grid grid-cols-2 gap-6">
             {code ? (
-              <p className="p-4 text-xl font-bold ">{code}</p>
+              <></>
             ) : (
-              <div></div>
+              <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 gap-4 flex flex-col items-center justify-center">
+                <input
+                  type="text"
+                  title="code"
+                  placeholder="Enter your code"
+                  className="bg-neutral-800 border border-neutral-700 rounded focus:outline-neutral-700 p-2"
+                  value={enterCode} // Bind the value of the input field to the state
+                  onChange={(e) => setEnterCode(e.target.value)} // Update the state when the user types
+                />
+                <button
+                  onClick={joinGame} // Call joinGame when button is clicked
+                  className="w-full px-4 py-2 bg-green-800 border border-green-500 rounded-md"
+                >
+                  Join Game
+                </button>
+              </div>
             )}
+            <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 flex flex-col items-center justify-center">
+              <button
+                onClick={sendCode}
+                className="px-4 py-2 bg-green-800 border border-green-500 rounded-md"
+              >
+                {" "}
+                Generate Code
+              </button>
+              {code ? (
+                <p className="p-4 text-xl font-bold ">{code}</p>
+              ) : (
+                <div></div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-      {gameOver ? (
-        <Button
-          onClick={() => {
-            router.push("/home");
-          }}
-          className="bg-red-800 bg-opacity-50 border border-red-600 py-3 px-6 rounded-md"
-        >
-          Get Back to Home
-        </Button>
-      ) : (
-        <div></div>
-      )}
-    </div>
+        )}
+        {gameOver ? (
+          <Button
+            onClick={() => {
+              router.push("/home");
+            }}
+            className="bg-red-800 bg-opacity-50 border border-red-600 py-3 px-6 rounded-md"
+          >
+            Get Back to Home
+          </Button>
+        ) : (
+          <div></div>
+        )}
+      </div>
+    </>
   );
 }

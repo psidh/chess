@@ -4,7 +4,6 @@ import { emailAtom } from "@/recoil-persist/emailAtom";
 import { useState, useEffect } from "react";
 
 export default function Page() {
-  const [email, setEmail] = useRecoilState(emailAtom); 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,12 +11,11 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://chess-zji6.onrender.com/api/profile", {
-          method: "POST",
+        const response = await fetch("/api/profile", {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email }),
         });
 
         if (!response.ok) {
@@ -34,7 +32,7 @@ export default function Page() {
     };
 
     fetchData();
-  }, [email]);
+  }, []);
 
   if (loading) {
     return (
@@ -131,7 +129,9 @@ export default function Page() {
                   className="rounded-xl p-4 bg-neutral-800 hover:bg-emerald-900/20 transition-colors duration-300"
                 >
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">You vs {game.opponent}</h3>
+                    <h3 className="text-xl font-semibold">
+                      You vs {game.opponent}
+                    </h3>
                     <p className="text-neutral-400">Result: {game.result}</p>
                     <p className="text-neutral-500 text-sm">
                       Started: {new Date(game.startedAt).toLocaleString()}
