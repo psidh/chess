@@ -1,21 +1,19 @@
 "use client";
 import ChessBoard from "@/components/ChessBoard";
 import Button from "@/components/Button";
-import { useRecoilState } from "recoil";
-import { emailAtom } from "@/recoil-persist/emailAtom";
 import { useSocket } from "@/hooks/useSocket";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import UserCard from "@/components/UserCard";
 import { INIT_CUSTOM_GAME, ERROR, GAME_OVER, MOVE } from "@/lib/Messages";
 import Navbar from "@/components/Navbar";
+import { useRecoilState } from "recoil";
+import { emailAtom } from "@/recoil-persist/emailAtom";
 
 export default function Page() {
   const router = useRouter();
-  const session = useSession();
   const [email, setEmail] = useRecoilState(emailAtom);
   const socket = useSocket("custom");
   const [chess, setChess] = useState(new Chess());
@@ -87,13 +85,13 @@ export default function Page() {
   }, [socket, chess]);
 
   const sendCode = () => {
-    if (session.status !== "authenticated" || !session.data?.user?.email) {
+    if (!email) {
       console.error("User is not authenticated or email is unavailable");
       return;
     }
 
     if (!socket) {
-      setEmail(session.data.user.email);
+      console.log("Socket not connected");
     } else if (socket.readyState === WebSocket.OPEN) {
       let code1 = +Array.from({ length: 8 }, () =>
         Math.floor(Math.random() * 10)
@@ -102,7 +100,7 @@ export default function Page() {
         JSON.stringify({
           type: INIT_CUSTOM_GAME,
           payload: {
-            email: session.data.user.email,
+            email: email,
             code: code1,
           },
         })
@@ -115,20 +113,19 @@ export default function Page() {
   };
 
   const joinGame = () => {
-    if (session.status !== "authenticated" || !session.data?.user?.email) {
+    if (!email) {
       console.error("User is not authenticated or email is unavailable");
       return;
     }
 
     if (!socket) {
       console.log(socket.url);
-      setEmail(session.data.user.email);
     } else if (socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
           type: INIT_CUSTOM_GAME,
           payload: {
-            email: session.data.user.email,
+            email: email,
             code: enterCode,
           },
         })
@@ -139,7 +136,7 @@ export default function Page() {
     }
   };
 
-  if (session.status !== "authenticated") {
+  if (!email) {
     return (
       <div className="bg-black flex flex-col items-center justify-center h-screen">
         <img src="/loader.webp" alt="loader" />
@@ -148,11 +145,11 @@ export default function Page() {
   }
 
   return (
-    <>
-    <Navbar />
+    <div>
+      <Navbar />
       <div className="flex flex-col items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
         {start ? (
-          <>
+          <div>
             <UserCard
               who={"opp"}
               email={opponent.email}
@@ -163,11 +160,11 @@ export default function Page() {
               chess={chess}
               socket={socket}
               board={board}
-              email={session.data.user.email}
+              email={email}
               color={color}
             />
             <UserCard who={"you"} email={user.email} rating={user.rating} />
-          </>
+          </div>
         ) : (
           <div className="grid grid-cols-2 gap-6">
             {code ? (
@@ -219,6 +216,6 @@ export default function Page() {
           <div></div>
         )}
       </div>
-    </>
+    </div>
   );
 }

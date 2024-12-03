@@ -2,13 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
-import { useRecoilState } from "recoil";
-import { emailAtom } from "@/recoil-persist/emailAtom";
 import Navbar from "@/components/Navbar";
 
 export default function Page() {
   const router = useRouter();
-  const [email, setEmail] = useRecoilState(emailAtom);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

@@ -2,11 +2,8 @@
 import ChessBoard from "@/components/ChessBoard";
 import Button from "@/components/Button";
 import Navbar from "@/components/Navbar";
-import { useRecoilState } from "recoil";
-import { emailAtom } from "@/recoil-persist/emailAtom";
 import { useSocket } from "@/hooks/useSocket";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -14,14 +11,14 @@ import UserCard from "@/components/UserCard";
 import {
   INIT_GAME,
   ERROR,
-  INIT_CUSTOM_GAME,
   GAME_OVER,
   MOVE,
 } from "@/lib/Messages";
+import { useRecoilState } from "recoil";
+import { emailAtom } from "@/recoil-persist/emailAtom";
 
 export default function Page() {
   const router = useRouter();
-  const session = useSession();
   const [email, setEmail] = useRecoilState(emailAtom);
   const socket = useSocket("random");
   const [chess, setChess] = useState(new Chess());
@@ -92,18 +89,18 @@ export default function Page() {
   }, [socket, chess]);
 
   const handleNewGame = () => {
-    if (session.status !== "authenticated" || !session.data?.user?.email) {
+    if (!email) {
       console.error("User is not authenticated or email is unavailable");
       return;
     }
 
     if (!socket) {
-      setEmail(session.data.user.email);
+      setEmail(email);
     } else if (socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
           type: INIT_GAME,
-          payload: { email: session.data.user.email },
+          payload: { email: email },
         })
       );
       setButtonState("Waiting for Opponent...");
@@ -112,7 +109,7 @@ export default function Page() {
     }
   };
 
-  if (session.status !== "authenticated") {
+  if (!email) {
     return (
       <div className="bg-black flex flex-col items-center justify-center h-screen">
         <img src="/loader.webp" alt="loader" />
@@ -130,7 +127,7 @@ export default function Page() {
           chess={chess}
           socket={socket}
           board={board}
-          email={session.data.user.email}
+          email={email}
           color={color}
         />
         <UserCard

@@ -1,6 +1,4 @@
 "use client";
-import { useRecoilState } from "recoil";
-import { emailAtom } from "@/recoil-persist/emailAtom";
 import { useState, useEffect } from "react";
 
 export default function Page() {
