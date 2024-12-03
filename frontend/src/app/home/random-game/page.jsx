@@ -20,6 +20,7 @@ import { emailAtom } from "@/recoil-persist/emailAtom";
 export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useRecoilState(emailAtom);
+  
   const socket = useSocket("random");
   const [chess, setChess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
@@ -95,7 +96,7 @@ export default function Page() {
     }
 
     if (!socket) {
-      setEmail(email);
+      // setEmail(email);
     } else if (socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({

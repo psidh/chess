@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 export async function GET(request) {
   try {
     const userID = await getDataFromToken(request);
-
+    console.log(userID);
+    
     const user = await prisma.user.findUnique({
       where: { userId: userID },
       include: {
@@ -27,7 +28,8 @@ export async function GET(request) {
         },
       },
     });
-
+    console.log(user);
+    
     if (!user) {
       return NextResponse.json(
         { message: "User not found", status: 404 },

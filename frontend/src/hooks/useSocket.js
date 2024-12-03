@@ -1,18 +1,31 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { emailAtom } from "@/recoil-persist/emailAtom";
+
+import axios from "axios";
+
 export const useSocket = (type) => {
   const [socket, setSocket] = useState(null);
-  const [email, setEmail] = useRecoilState(emailAtom);
-  console.log(email);
-  
+  const [email, setEmail] = useState("");
   useEffect(() => {
-    if (email && type ) {
+    const fetchData = async () => {
+      const response = await axios.get("/check");
+      setEmail(response.data.email);
+      console.log(response.data.email);
+    };
+    fetchData();
+  }, []);
+  
+  
+
+  useEffect(() => {
+    if (email && type) {
       const ws = new WebSocket(
-        `wss://obliged-krystal-p-sidharth42069-c7350fbe.koyeb.app?email=${encodeURIComponent(email)}&type=${type}`
+        `wss://obliged-krystal-p-sidharth42069-c7350fbe.koyeb.app/?email=${encodeURIComponent(
+          email
+        )}&type=${type}`
       );
       console.log(ws.url);
-      
+      console.log("Email: " + email);
+
       ws.onopen = () => {
         console.log("Connected to the socket...");
         setSocket(ws);
