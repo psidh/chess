@@ -1,5 +1,6 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "react-hot-toast";
 
 import RecoilRoot from "./RecoilRoot";
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${inter.variable} antialiased bg-black text-white`}
       >
+     <Analytics />
         <RecoilRoot>
           <Toaster />
           {children}
