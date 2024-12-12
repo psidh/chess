@@ -13,7 +13,7 @@ ws.on("connection", (socket, req) => {
   const email = parsedUrl.query?.email;
   //@ts-ignore
   const type = parsedUrl.query?.type;
-  console.log(parsedUrl);
+  // console.log(parsedUrl);
   
 
   if (email && type !== "custom") {

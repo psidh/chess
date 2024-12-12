@@ -41,13 +41,11 @@ class CustomManager {
                     console.log("under user1 log: " + user.email);
                     this.user1.email = user.email;
                     this.user1.rating = user.rating;
-                    console.log(this.user1);
                 }
                 else {
                     console.log(user.email);
                     this.user2.email = user.email;
                     this.user2.rating = user.rating;
-                    console.log(this.user2);
                 }
                 this.matchMaker(socket, user.userId);
             }
@@ -68,7 +66,6 @@ class CustomManager {
                 if (this.pendingUser && this.pendingUser.gameId == code) {
                     const game = new CustomGame_1.CustomGame((_a = this.pendingUser) === null || _a === void 0 ? void 0 : _a.socket, socket, (_b = this.pendingUser) === null || _b === void 0 ? void 0 : _b.userId, userId, this.user1, this.user2, Number(code));
                     this.games.push(game);
-                    console.log("Game initialized with players:", this.pendingUser.userId, userId);
                     this.pendingUser = null;
                 }
                 else {

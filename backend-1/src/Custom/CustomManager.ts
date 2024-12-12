@@ -42,12 +42,10 @@ export class CustomManager {
         console.log("under user1 log: " + user.email);
         this.user1.email = user.email;
         this.user1.rating = user.rating;
-        console.log(this.user1);
       } else {
         console.log(user.email);
         this.user2.email = user.email;
         this.user2.rating = user.rating;
-        console.log(this.user2);
       }
 
       this.matchMaker(socket, user.userId);
@@ -78,11 +76,6 @@ export class CustomManager {
           );
 
           this.games.push(game);
-          console.log(
-            "Game initialized with players:",
-            this.pendingUser.userId,
-            userId
-          );
           this.pendingUser = null;
         } else {
           this.pendingUser = { socket, userId, gameId : message.payload.code };

@@ -1,26 +1,27 @@
 "use client";
-import ChessBoard from "@/components/ChessBoard";
-import Button from "@/components/Button";
-import Navbar from "@/components/Navbar";
-import { useSocket } from "@/hooks/useSocket";
+import {
+  MOVE,
+  ERROR,
+  GAME_OVER,
+  INIT_CUSTOM_GAME,
+  INIT_GAME,
+} from "@/lib/Messages";
 import { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import ChessBoard from "@/components/ChessBoard";
+import Button from "@/components/Button";
+import Navbar from "@/components/Navbar";
 import UserCard from "@/components/UserCard";
-import {
-  INIT_GAME,
-  ERROR,
-  GAME_OVER,
-  MOVE,
-} from "@/lib/Messages";
+import { useSocket } from "@/hooks/useSocket";
 import { useRecoilState } from "recoil";
 import { emailAtom } from "@/recoil-persist/emailAtom";
 
 export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useRecoilState(emailAtom);
-  
+
   const socket = useSocket("random");
   const [chess, setChess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
@@ -36,6 +37,19 @@ export default function Page() {
     email: "",
     rating: 0,
   });
+
+  useEffect(() => {
+    // Prevent page reload or navigation
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // Required for showing the confirmation dialog
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -54,7 +68,6 @@ export default function Page() {
           toast.success(
             `Game initialized with color: ${message.payload.color}`
           );
-          console.log(message.payload.color);
           setOpponent(message.payload.opponent);
           setUser(message.payload.you);
           setColor(message.payload.color);
@@ -66,7 +79,6 @@ export default function Page() {
           const move = message.payload;
           chess.move(move);
           setBoard(chess.board());
-          console.log("Move received and applied:", move);
           break;
 
         case GAME_OVER:
@@ -76,7 +88,7 @@ export default function Page() {
           break;
 
         default:
-          alert("Unknown message type:", message.type);
+          console.error("Unknown message type:", message.type);
       }
     };
 
@@ -96,7 +108,7 @@ export default function Page() {
     }
 
     if (!socket) {
-      // setEmail(email);
+      // Handle when socket is null
     } else if (socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
@@ -121,7 +133,15 @@ export default function Page() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
+      <div className="flex flex-col items-center justify-center gap-y-6 md;gap-12 p-12">
+        {!start && (
+          <Button
+            onClick={handleNewGame}
+            className="bg-green-800 py-3 px-6 rounded-md"
+          >
+            {buttonState}
+          </Button>
+        )}
         <UserCard who={"opp"} email={opponent.email} rating={opponent.rating} />
         <ChessBoard
           setBoard={setBoard}
@@ -131,19 +151,7 @@ export default function Page() {
           email={email}
           color={color}
         />
-        <UserCard
-          who={"you"}
-          email={user.email}
-          rating={user.rating}
-        />
-        {!start && (
-          <Button
-            onClick={handleNewGame}
-            className="bg-green-800 py-3 px-6 rounded-md"
-          >
-            {buttonState}
-          </Button>
-        )}
+        <UserCard who={"you"} email={email} rating={user.rating} />
         {gameOver ? (
           <button
             onClick={() => {

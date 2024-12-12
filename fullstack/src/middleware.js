@@ -6,7 +6,7 @@ export function middleware(request) {
   const isPrivatePath =
     path === "/home" ||
     path === "/home/1v1" ||
-    path === "/home/randome-game" ||
+    path === "/home/random-game" ||
     path === "/home/profile";
 
   const token = request.cookies.get("token")?.value || "";
@@ -25,7 +25,7 @@ export const config = {
     "/login",
     "/signup",
     "/home/1v1",
-    "/home/randome-game",
+    "/home/random-game",
     "/home/profile",
   ],
 };

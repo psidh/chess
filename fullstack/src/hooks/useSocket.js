@@ -18,8 +18,13 @@ export const useSocket = (type) => {
 
   useEffect(() => {
     if (email && type) {
+      // const ws = new WebSocket(
+      //   `wss://obliged-krystal-p-sidharth42069-c7350fbe.koyeb.app/?email=${encodeURIComponent(
+      //     email
+      //   )}&type=${type}`
+      // );
       const ws = new WebSocket(
-        `wss://obliged-krystal-p-sidharth42069-c7350fbe.koyeb.app/?email=${encodeURIComponent(
+        `ws://localhost:3001/?email=${encodeURIComponent(
           email
         )}&type=${type}`
       );

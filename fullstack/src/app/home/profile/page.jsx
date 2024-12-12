@@ -56,17 +56,17 @@ export default function Page() {
     <div>
       <Navbar />
       <div className="flex flex-col items-center justify-center bg-black text-white p-8">
-        <div className="w-2/3">
+        <div className="w-full md:w-2/3">
           <div className="flex flex-col md:flex-row items-center mb-8">
-            <div className="bg-neutral-800 border border-white/10 rounded-xl p-6 w-auto sm:w-[40rem] shadow-lg">
+            <div className="bg-neutral-800 border border-white/10 rounded-xl p-4 shadow-lg">
               <div className="flex items-center">
-                <div className="w-16 h-16 bg-emerald-500 rounded-full flex justify-center items-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-white rounded-full flex justify-center items-center text-black text-2xl font-bold">
                   U
                 </div>
                 <div className="ml-4">
-                  <h1 className="text-3xl font-bold">{user?.email}</h1>
-                  <p className="text-emerald-300 flex items-center">
-                    <span className="w-4 h-4 mr-2 bg-yellow-500 rounded-full"></span>
+                  <h1 className="text-md md:text-3xl font-bold">{user?.email}</h1>
+                  <p className="text-neutral-300 flex items-center">
+                    <span className="w-4 h-4 mr-2 bg-white rounded-full"></span>
                     Rating: {user?.rating}
                   </p>
                 </div>
@@ -77,27 +77,26 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-neutral-800 p-6 rounded-lg hover:scale-105 transform transition">
               <h2 className="text-2xl font-bold mb-4 flex items-center">
-                <span className="mr-3 w-6 h-6 bg-emerald-500 rounded-full"></span>
                 Game Stats
               </h2>
               <div className="space-y-3">
                 <p className="flex justify-between">
                   <span className="font-semibold flex items-center">
-                    <span className="mr-2 w-4 h-4 bg-yellow-500 rounded-full"></span>
+                    
                     Total Games
                   </span>
                   {user?.totalGames}
                 </p>
                 <p className="flex justify-between">
                   <span className="font-semibold flex items-center">
-                    <span className="mr-2 w-4 h-4 bg-green-500 rounded-full"></span>
+                  <span className="mr-2 w-4 h-4 bg-green-500 rounded-full"></span>
                     Wins
                   </span>
                   {user?.wins === 0 ? 1 : user?.wins}
                 </p>
                 <p className="flex justify-between">
                   <span className="font-semibold flex items-center">
-                    <span className="mr-2 w-4 h-4 bg-red-500 rounded-full"></span>
+                  <span className="mr-2 w-4 h-4 bg-red-500 rounded-full"></span>
                     Losses
                   </span>
                   {user?.losses}
@@ -129,7 +128,7 @@ export default function Page() {
                 {user?.recentGames.map((game, index) => (
                   <div
                     key={index}
-                    className="rounded-xl p-4 bg-neutral-800 hover:bg-emerald-900/20 transition-colors duration-300"
+                    className="rounded-xl p-4 bg-neutral-800"
                   >
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold">

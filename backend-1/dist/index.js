@@ -14,7 +14,7 @@ ws.on("connection", (socket, req) => {
     const email = (_a = parsedUrl.query) === null || _a === void 0 ? void 0 : _a.email;
     //@ts-ignore
     const type = (_b = parsedUrl.query) === null || _b === void 0 ? void 0 : _b.type;
-    console.log(parsedUrl);
+    // console.log(parsedUrl);
     if (email && type !== "custom") {
         manager.addUser(socket, email);
     }

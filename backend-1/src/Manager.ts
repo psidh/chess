@@ -35,16 +35,14 @@ export class Manager {
 
       this.users.push({ socket, userId: user.userId });
       if (this.user1.email === "") {
-        console.log("under user1 log: " + user.email);
-
         this.user1.email = user.email;
         this.user1.rating = user.rating;
-        console.log(this.user1);
+        console.log("User 1: email", this.user1.email);
+        
       } else {
-        console.log(user.email);
         this.user2.email = user.email;
         this.user2.rating = user.rating;
-        console.log(this.user2);
+        console.log("User 2: email", this.user2.email);
       }
 
       this.matchMaker(socket, user.userId);
@@ -73,15 +71,9 @@ export class Manager {
           );
 
           this.games.push(game);
-          console.log(
-            "Game initialized with players:",
-            this.pendingUser.userId,
-            userId
-          );
           this.pendingUser = null;
         } else {
           this.pendingUser = { socket, userId };
-          // console.log("User added to pending queue:", userId);
         }
       }
 

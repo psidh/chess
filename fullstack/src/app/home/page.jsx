@@ -17,7 +17,7 @@ export default function Page() {
       <Navbar />
 
       <main className="flex flex-col items-center justify-center flex-grow p-6 space-y-4">
-        <img src="/chess.svg" alt="" className="w-1/2 md:w-[30%]" />
+        <img src="https://img.etimg.com/thumb/width-1200,height-1200,imgsize-832996,resizemode-75,msid-109832236/wealth/earn/9-time-tested-principles-used-in-chess-that-can-improve-the-win-rate-in-your-job-and-career.jpg" alt="" className="w-1/2 md:w-[30%] rounded-3xl" />
         <h2 className="text-4xl font-extrabold tracking-wide">
           Ready to Play Chess?
         </h2>
@@ -27,17 +27,15 @@ export default function Page() {
 
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
           <Button
-            className="w-64 px-8 py-3 text-white
-       bg-gradient-to-r from-blue-800/20 via-blue-800 to-blue-800/20 text-lg font-semibold rounded-lg
-       border border-zinc-800"
+            className="w-64 px-8 py-3 bg-neutral-800 text-lg font-semibold rounded-lg
+       "
             onClick={() => router.push("/home/random-game")}
           >
             Random game
           </Button>
           <Button
-            className="w-64 px-8 py-3 text-white
-       bg-gradient-to-r from-sky-800/20 via-sky-800 to-sky-800/20 text-lg font-semibold rounded-lg
-       border border-zinc-800"
+            className="w-64 px-8 py-3
+       bg-white text-black  text-lg font-semibold rounded-lg"
             onClick={() => router.push("/home/1v1")}
           >
             Play 1v1

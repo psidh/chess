@@ -38,16 +38,14 @@ class Manager {
                 }
                 this.users.push({ socket, userId: user.userId });
                 if (this.user1.email === "") {
-                    console.log("under user1 log: " + user.email);
                     this.user1.email = user.email;
                     this.user1.rating = user.rating;
-                    console.log(this.user1);
+                    console.log("User 1: email", this.user1.email);
                 }
                 else {
-                    console.log(user.email);
                     this.user2.email = user.email;
                     this.user2.rating = user.rating;
-                    console.log(this.user2);
+                    console.log("User 2: email", this.user2.email);
                 }
                 this.matchMaker(socket, user.userId);
             }
@@ -67,12 +65,10 @@ class Manager {
                 if (this.pendingUser) {
                     const game = new Game_1.Game((_a = this.pendingUser) === null || _a === void 0 ? void 0 : _a.socket, socket, (_b = this.pendingUser) === null || _b === void 0 ? void 0 : _b.userId, userId, this.user1, this.user2);
                     this.games.push(game);
-                    console.log("Game initialized with players:", this.pendingUser.userId, userId);
                     this.pendingUser = null;
                 }
                 else {
                     this.pendingUser = { socket, userId };
-                    // console.log("User added to pending queue:", userId);
                 }
             }
             if (message.type === Messages_1.MOVE) {
