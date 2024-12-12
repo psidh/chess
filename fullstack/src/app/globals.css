@@ -13,17 +13,15 @@
   }
 
   .input {
-    @apply p-2 border border-neutral-700 rounded-md mb-6 focus:outline-none w-full;
+    @apply block w-full px-4 py-2 border border-neutral-700 rounded-lg focus:outline-none bg-neutral-900 text-white;
   }
 
   .login {
     @apply flex flex-col border border-neutral-700 py-4 px-8 rounded-lg w-[80%] md:w-[50%];
   }
 
-  .footer-grid{
-
-    @apply grid sm:grid-cols-1 sm:mx-4 sm:px-8 sm:py-10 md:grid-cols-2 md:mx-16 md:p-14 lg:grid-cols-4 lg:mx-32 lg:p-20 
-
+  .footer-grid {
+    @apply grid sm:grid-cols-1 sm:mx-4 sm:px-8 sm:py-10 md:grid-cols-2 md:mx-16 md:p-14 lg:grid-cols-4 lg:mx-32 lg:p-20;
   }
 
   .footer-link {
@@ -45,26 +43,24 @@
     @apply hidden lg:flex lg:justify-between items-end px-2 cursor-pointer text-sm text-neutral-200 border-[#131a22] hover:border-white border;
   }
 
-
   .profile-card .card {
-    @apply flex flex-col items-start  justify-start
+    @apply flex flex-col items-start  justify-start;
   }
 
-  .profile-card .card h1{
-    @apply font-bold text-xl 
+  .profile-card .card h1 {
+    @apply font-bold text-xl;
   }
 
-  .profile-card .card p{
-    @apply font-light text-lg 
+  .profile-card .card p {
+    @apply font-light text-lg;
   }
 
-  .orders{
-    @apply  w-[50%] p-4 space-x-8 my-8 flex justify-between items-center rounded-lg border border-slate-400 bg-slate-100 hover:bg-neutral-200 transition duration-200
+  .orders {
+    @apply w-[50%] p-4 space-x-8 my-8 flex justify-between items-center rounded-lg border border-slate-400 bg-slate-100 hover:bg-neutral-200 transition duration-200;
   }
 
-
-  .orders p{
-    @apply text-lg my-4
+  .orders p {
+    @apply text-lg my-4;
   }
 
   .success {

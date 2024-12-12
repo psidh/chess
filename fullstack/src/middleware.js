@@ -3,11 +3,15 @@ import { NextResponse } from "next/server";
 export function middleware(request) {
   const path = request.nextUrl.pathname;
 
-  const isPrivatePath = path === "/home";
+  const isPrivatePath =
+    path === "/home" ||
+    path === "/home/1v1" ||
+    path === "/home/randome-game" ||
+    path === "/home/profile";
 
   const token = request.cookies.get("token")?.value || "";
-
-  if (isPrivatePath && !token) {
+  
+  if (isPrivatePath && token === "") {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 
@@ -15,5 +19,13 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/signup", "/profile", "/home/:path*"],
+  matcher: [
+    "/",
+    "/home",
+    "/login",
+    "/signup",
+    "/home/1v1",
+    "/home/randome-game",
+    "/home/profile",
+  ],
 };

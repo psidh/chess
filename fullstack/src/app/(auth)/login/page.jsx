@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -10,77 +10,92 @@ import { emailAtom } from "@/recoil-persist/emailAtom";
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useRecoilState(emailAtom);
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
-  const [buttonDisabled, setButtonDisabled] = React.useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get("/check");
-      console.log(emailAtom);
-      if (response.status == 200) {
-        router.push("/home");
+  const checkAuthentication = useCallback(async () => {
+    try {
+      const response = await axios.get("/check", {
+        timeout: 3000,
+
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      });
+
+      if (response.status === 200) {
+        router.replace("/home");
       }
-    };
-    fetchData();
-  }, []);
+    } catch (error) {
+      console.error("Authentication check failed");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
 
   const handleLogin = async () => {
     try {
-      toast.loading("Waiting...", {
+      const loadingToast = toast.loading("Logging in...", {
         duration: 2000,
       });
-      const response = await axios.post("/api/login", user);
+
+      const response = await axios.post("/api/login", user, {
+        timeout: 5000,
+      });
+
       setEmail(response.data.email);
-      console.log(response.data.email);
+
+      toast.dismiss(loadingToast);
       toast.success("Login successful");
-      router.push("/login");
+
+      router.prefetch("/home");
+      router.replace("/home", { scroll: false });
     } catch (error) {
-      console.log(error);
+      toast.error(error.response?.data?.message || "Login failed");
+      console.error("Login error:", error);
     }
   };
 
   useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0) {
-      setButtonDisabled(false);
-    } else {
-      setButtonDisabled(true);
-    }
-  }, [user]);
+    setButtonDisabled(!(user.email.length > 0 && user.password.length > 0));
+  }, [user.email, user.password]);
 
   return (
-    <div className="flex flex-col justify-center items-center my-24 ">
+    <div className="flex flex-col justify-center items-center my-24">
       <div className="login">
         <Toaster />
         <h1 className="text-4xl font-bold text-neutral-300 my-8 text-center">
           Login
         </h1>
-
-        <label htmlFor="email" className="mb-2 font-semibold">
+        <label htmlFor="email" className="mb-4 font-semibold">
           Email
         </label>
         <input
-          className="block w-full px-4 py-2 border border-neutral-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input mb-6"
           id="email"
           type="email"
           placeholder="Enter your email"
           value={user.email}
-          onChange={(event) => setUser({ ...user, email: event.target.value })}
+          onChange={(event) =>
+            setUser((prev) => ({ ...prev, email: event.target.value }))
+          }
         />
-
-        <label htmlFor="password" className="mb-2 font-semibold">
+        <label htmlFor="password" className="mb-4 font-semibold">
           Password
         </label>
         <input
-          className="block w-full px-4 py-2 border border-neutral-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input mb-6"
           id="password"
           type="password"
           placeholder="Enter your password"
           value={user.password}
           onChange={(event) =>
-            setUser({ ...user, password: event.target.value })
+            setUser((prev) => ({ ...prev, password: event.target.value }))
           }
         />
         {buttonDisabled ? (
@@ -91,14 +106,19 @@ export default function Login() {
             >
               Login
             </button>
-            <Link href={"/signup"}>New User? SignUp</Link>
+            <Link href="/signup" prefetch>
+              New User? SignUp
+            </Link>
           </div>
         ) : (
           <div className="flex flex-col">
             <button onClick={handleLogin} className="auth">
               Login
             </button>
-            <Link href={"/signup"}>New User? SignUp</Link>
+            <Link href="/signup" prefetch>
+              New User? SignUp
+            </Link>
+            <a href="/home" className="text-semibold mt-6 ">Did not get redirected? <span className="hover:text-blue-600 hover:underline">Go to Home</span></a>
           </div>
         )}
       </div>
