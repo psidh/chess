@@ -11,6 +11,7 @@ import { INIT_CUSTOM_GAME, ERROR, GAME_OVER, MOVE } from "@/lib/Messages";
 import Navbar from "@/components/Navbar";
 import { useRecoilState } from "recoil";
 import { emailAtom } from "@/recoil-persist/emailAtom";
+import { Copy, CheckCircle } from "lucide-react";
 
 export default function Page() {
   const router = useRouter();
@@ -20,8 +21,9 @@ export default function Page() {
   const [board, setBoard] = useState(chess.board());
   const [start, setStart] = useState(false);
   const [buttonState, setButtonState] = useState("Generate Code");
-  const [code, setCode] = useState(null);
-  const [enterCode, setEnterCode] = useState(""); // State for the code input
+  const [code, setCode] = useState("");
+  const [enterCode, setEnterCode] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
 
   const [color, setColor] = useState("");
   const [gameOver, setGameOver] = useState(false);
@@ -105,10 +107,19 @@ export default function Page() {
           },
         })
       );
-      setCode(code1);
+      setCode(code1.toString());
       setButtonState("Waiting for Opponent...");
     } else {
       console.error("WebSocket is not open");
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (code) {
+      navigator.clipboard.writeText(code).then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      });
     }
   };
 
@@ -138,7 +149,7 @@ export default function Page() {
 
   if (!email) {
     return (
-      <div className="bg-black flex flex-col items-center justify-center h-screen">
+      <div className="bg-neutral-900 flex flex-col items-center justify-center h-screen">
         <img src="/loader.webp" alt="loader" />
       </div>
     );
@@ -147,7 +158,7 @@ export default function Page() {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-col items-center justify-center gap-12 min-h-screen bg-gradient-to-b from-neutral-000 to-black p-12">
+      <div className="flex flex-col items-center justify-center gap-12 mt-12 bg-neutral-950 p-12">
         {start ? (
           <div>
             <UserCard
@@ -166,37 +177,49 @@ export default function Page() {
             <UserCard who={"you"} email={user.email} rating={user.rating} />
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-6">
+          <div className="flex flex-col items-center justify-center bg-neutral-800 p-6 rounded-2xl border border-neutral-700 gap-6 w-full md:w-1/2">
             {code ? (
               <></>
             ) : (
-              <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 gap-4 flex flex-col items-center justify-center">
+              <div className="bg-neutral-800 rounded-md p-4 gap-4 flex flex-col items-center justify-center">
                 <input
                   type="text"
                   title="code"
                   placeholder="Enter your code"
-                  className="bg-neutral-800 border border-neutral-700 rounded focus:outline-neutral-700 p-2"
-                  value={enterCode} // Bind the value of the input field to the state
-                  onChange={(e) => setEnterCode(e.target.value)} // Update the state when the user types
+                  className="bg-neutral-800 border border-neutral-700 rounded focus:outline-neutral-700 p-2 w-full "
+                  value={enterCode}
+                  onChange={(e) => setEnterCode(e.target.value)}
                 />
                 <button
-                  onClick={joinGame} // Call joinGame when button is clicked
-                  className="w-full px-4 py-2 bg-green-800 border border-green-500 rounded-md"
+                  onClick={joinGame}
+                  className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-md  hover:bg-neutral-600 transition-colors"
                 >
                   Join Game
                 </button>
               </div>
             )}
-            <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 flex flex-col items-center justify-center">
+            <div className="bg-neutral-800 border border-neutral-700 rounded-md p-4 flex flex-col items-center justify-center ">
               <button
                 onClick={sendCode}
-                className="px-4 py-2 bg-green-800 border border-green-500 rounded-md"
+                className="px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-md  hover:bg-neutral-600 transition-colors"
               >
-                {" "}
                 Generate Code
               </button>
               {code ? (
-                <p className="p-4 text-xl font-bold ">{code}</p>
+                <div className="flex items-center gap-2 p-4">
+                  <p className="text-xl font-bold ">{code}</p>
+                  <button
+                    onClick={copyToClipboard}
+                    className="text-neutral-400 hover: transition-colors"
+                    title={isCopied ? "Copied!" : "Copy to Clipboard"}
+                  >
+                    {isCopied ? (
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <Copy className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
               ) : (
                 <div></div>
               )}
@@ -208,7 +231,7 @@ export default function Page() {
             onClick={() => {
               router.push("/home");
             }}
-            className="bg-red-800 bg-opacity-50 border border-red-600 py-3 px-6 rounded-md"
+            className="bg-neutral-800 bg-opacity-80 border border-neutral-700 py-3 px-6 rounded-md  hover:bg-neutral-700 transition-colors"
           >
             Get Back to Home
           </Button>
