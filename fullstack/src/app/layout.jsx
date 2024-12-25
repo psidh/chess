@@ -2,6 +2,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react"
 
 import RecoilRoot from "./RecoilRoot";
 const inter = Plus_Jakarta_Sans({
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
      <Analytics />
         <RecoilRoot>
           <Toaster />
+          <Analytics />
           {children}
         </RecoilRoot>
       </body>
